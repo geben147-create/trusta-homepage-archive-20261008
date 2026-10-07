@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WISIK Original Image Stack</title>
+    <meta
+      name="description"
+      content="A responsive long-scroll page that stitches the supplied WISIK homepage captures in numeric order."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="stack-page">
+    <header class="topbar" aria-label="Page navigation">
+      <a class="brand" href="index.html">WISIK</a>
+      <nav class="nav-links" aria-label="Version links">
+        <a aria-current="page" href="image-stack.html">Image Stack</a>
+        <a href="responsive-remake.html">Responsive Remake</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="stack-intro" aria-labelledby="stack-title">
+        <p class="eyebrow">Version 01</p>
+        <h1 id="stack-title">Original image-stack homepage</h1>
+        <p>
+          The numbered captures are placed in exact numeric order with no
+          visual rewriting, so this version is the most faithful and stable.
+        </p>
+      </section>
+
+      <section
+        id="screen-stack"
+        class="screen-stack"
+        data-render-mode="stack"
+        aria-label="Homepage captures in numeric order"
+      ></section>
+    </main>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>

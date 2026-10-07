@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRUSTA - 의료광고 AI 법률 검증 시스템</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans KR',sans-serif;background:#f8f9fa;color:#1a1a1a;-webkit-font-smoothing:antialiased}
+.num{font-family:'Montserrat','Noto Sans KR',sans-serif}
+img{max-width:100%}
+
+/* Layout */
+.page{max-width:720px;margin:0 auto;background:#fff;box-shadow:0 0 60px rgba(0,0,0,.08)}
+section{padding:60px 32px;overflow:hidden;text-align:center}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#0A1628 0%,#1a3a6c 50%,#2563EB 100%);color:#fff;text-align:center;padding:80px 32px 70px}
+.hero .badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:30px;padding:8px 24px;font-size:13px;font-weight:500;letter-spacing:.5px;margin-bottom:36px;backdrop-filter:blur(10px)}
+.hero h1{font-size:36px;font-weight:900;line-height:1.35;margin-bottom:20px;letter-spacing:-1px}
+.hero h1 span{color:#60a5fa}
+.hero .sub{font-size:16px;font-weight:300;line-height:1.7;opacity:.85;margin-bottom:48px}
+.stats{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.stat-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px 20px;flex:1;min-width:140px;backdrop-filter:blur(10px)}
+.stat-card .label{font-size:12px;opacity:.7;margin-bottom:8px}
+.stat-card .value{font-size:32px;font-weight:800;line-height:1}
+.stat-card .unit{font-size:14px;font-weight:400;opacity:.8}
+
+/* Pain */
+.pain{background:#fff;text-align:center}
+.pain .eyebrow{font-size:14px;color:#6b7280;margin-bottom:12px}
+.pain h2{font-size:28px;font-weight:900;line-height:1.4;margin-bottom:40px;letter-spacing:-1px}
+.pain-card{background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:28px 24px;margin-bottom:16px;text-align:center;font-size:17px;line-height:1.6;color:#374151;position:relative}
+.pain-card em{font-style:normal;color:#ef4444;font-weight:700}
+.pain .data-row{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+.pain .data-item{flex:1;min-width:180px;background:#fef2f2;border-radius:12px;padding:20px;text-align:center}
+.pain .data-item .num{font-size:28px;font-weight:800;color:#dc2626}
+.pain .data-item .desc{font-size:13px;color:#6b7280;margin-top:6px}
+
+/* Credibility */
+.cred{background:linear-gradient(180deg,#0f172a,#1e293b);color:#fff;text-align:center}
+.cred .eyebrow{font-size:14px;opacity:.6;margin-bottom:12px}
+.cred h2{font-size:28px;font-weight:900;margin-bottom:48px}
+.cred-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px}
+.cred-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:28px 20px;text-align:center}
+.cred-item .icon{font-size:32px;margin-bottom:12px}
+.cred-item .val{font-size:28px;font-weight:800;margin-bottom:6px}
+.cred-item .lbl{font-size:13px;opacity:.6}
+
+/* Story */
+.story{background:#fff;text-align:center}
+.story .eyebrow{font-size:14px;color:#6b7280;text-align:center;margin-bottom:12px}
+.story h2{font-size:28px;font-weight:900;text-align:center;margin-bottom:48px;letter-spacing:-1px}
+.story-block{margin-bottom:48px;text-align:center}
+.story-num{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:#ef4444;color:#fff;border-radius:50%;font-size:16px;font-weight:800;margin-bottom:16px}
+.story-block h3{font-size:20px;font-weight:700;margin-bottom:12px;line-height:1.4}
+.story-block p{font-size:15px;color:#4b5563;line-height:1.8}
+.story-block p strong{color:#1a1a1a}
+
+/* Underdog */
+.underdog{background:linear-gradient(180deg,#eff6ff,#dbeafe);text-align:center;padding:80px 32px}
+.underdog .quote{font-size:22px;font-weight:300;line-height:1.7;color:#1e3a5f;margin-bottom:32px}
+.underdog .quote strong{font-weight:700;color:#0A1628}
+.underdog .punchline{font-size:28px;font-weight:900;color:#1e40af;margin-bottom:32px;line-height:1.4}
+.underdog .reveal{background:#fff;border-radius:16px;padding:32px;margin-top:32px;box-shadow:0 4px 24px rgba(0,0,0,.06)}
+.underdog .reveal p{font-size:15px;color:#6b7280;line-height:1.8}
+.underdog .reveal .big{font-size:22px;font-weight:900;color:#1e40af;margin-top:16px}
+
+/* Objection */
+.objection{background:#fff;text-align:center}
+.objection h2{font-size:28px;font-weight:900;text-align:center;margin-bottom:48px}
+.obj-item{margin-bottom:36px}
+.obj-q{background:#f1f5f9;border-radius:16px;padding:20px 24px;font-size:16px;font-weight:500;color:#374151;margin-bottom:12px;text-align:center}
+.obj-a{background:#2563EB;border-radius:16px;padding:20px 24px;font-size:15px;color:#fff;line-height:1.7;text-align:center}
+.obj-a strong{color:#93c5fd}
+
+/* Value Stack */
+.value-stack{background:#0f172a;color:#fff;padding:80px 32px;text-align:center}
+.value-stack h2{font-size:28px;font-weight:900;text-align:center;margin-bottom:12px}
+.value-stack .sub{text-align:center;font-size:14px;opacity:.5;margin-bottom:48px}
+.vs-category{margin-bottom:36px}
+.vs-cat-title{font-size:13px;font-weight:700;color:#60a5fa;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.1);text-align:center}
+.vs-item{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.05);text-align:center}
+.vs-num{display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;background:#2563EB;color:#fff;border-radius:8px;font-size:14px;font-weight:800;flex-shrink:0}
+.vs-content{text-align:center}
+.vs-content h4{font-size:16px;font-weight:700;margin-bottom:4px}
+.vs-content p{font-size:13px;opacity:.5;line-height:1.5}
+
+/* Review */
+.reviews{background:linear-gradient(180deg,#0A1628,#1a2744);padding:80px 32px;text-align:center}
+.reviews h2{font-size:28px;font-weight:900;color:#fff;text-align:center;margin-bottom:48px}
+.review-card{background:#fff;border-radius:20px;padding:36px 28px;margin-bottom:20px;position:relative;text-align:center}
+.review-stars{color:#f59e0b;font-size:20px;margin-bottom:16px;letter-spacing:4px}
+.review-text{font-size:16px;line-height:1.8;color:#374151;margin-bottom:16px}
+.review-text strong{color:#1a1a1a}
+.review-author{font-size:13px;color:#9ca3af}
+
+/* Before/After */
+.ba{background:#fff;text-align:center}
+.ba h2{font-size:28px;font-weight:900;margin-bottom:48px}
+.ba-table{width:100%;border-collapse:collapse;font-size:14px;text-align:center}
+.ba-table th{padding:14px 12px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1px;text-align:center}
+.ba-table th.before{background:#fef2f2;color:#dc2626;border-radius:12px 0 0 0}
+.ba-table th.after{background:#f0fdf4;color:#16a34a;border-radius:0 12px 0 0}
+.ba-table td{padding:14px 12px;border-bottom:1px solid #f3f4f6;text-align:center}
+.ba-table tr:last-child td{border-bottom:none}
+.ba-table .metric{font-weight:600;color:#6b7280;background:#f9fafb}
+.ba-table .bad{color:#dc2626;font-weight:600;background:#fef2f2}
+.ba-table .good{color:#16a34a;font-weight:700;background:#f0fdf4}
+
+/* Market */
+.market{background:linear-gradient(135deg,#0f172a,#1e3a5f);color:#fff;text-align:center;padding:80px 32px}
+.market h2{font-size:28px;font-weight:900;margin-bottom:16px}
+.market .market-sub{font-size:15px;opacity:.6;margin-bottom:48px;line-height:1.6}
+.map-container{position:relative;width:100%;aspect-ratio:16/9;margin-bottom:48px;background:rgba(255,255,255,.03);border-radius:20px;border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.map-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.08;font-size:200px;pointer-events:none}
+.map-dot{position:absolute;display:flex;flex-direction:column;align-items:center;gap:4px;transform:translate(-50%,-50%);cursor:default;z-index:2}
+.map-dot .dot{width:14px;height:14px;background:#2563EB;border-radius:50%;border:3px solid rgba(37,99,235,.3);box-shadow:0 0 20px rgba(37,99,235,.5);animation:pulse 2s infinite}
+.map-dot .dot-label{font-size:11px;font-weight:700;color:#fff;white-space:nowrap;background:rgba(0,0,0,.5);padding:2px 8px;border-radius:8px;backdrop-filter:blur(4px)}
+.map-line{position:absolute;z-index:1}
+@keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(37,99,235,.5)}50%{box-shadow:0 0 30px rgba(37,99,235,.8),0 0 60px rgba(37,99,235,.3)}}
+.country-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.country{text-align:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:24px 16px;transition:transform .2s,border-color .2s}
+.country:hover{transform:translateY(-4px);border-color:rgba(37,99,235,.4)}
+.country .flag{font-size:36px;margin-bottom:8px}
+.country h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.country .spend{font-size:13px;color:#60a5fa;font-weight:600;margin-bottom:8px;line-height:1.5}
+.country p{font-size:12px;opacity:.6;line-height:1.6}
+
+/* Competitor */
+.competitor{background:#fff;text-align:center}
+.competitor h2{font-size:28px;font-weight:900;text-align:center;margin-bottom:48px}
+.comp-table{width:100%;border-collapse:collapse;font-size:13px;text-align:center}
+.comp-table thead th{padding:12px 8px;background:#f8fafc;font-weight:700;font-size:12px;color:#6b7280;border-bottom:2px solid #e2e8f0;text-align:center}
+.comp-table thead th:last-child{background:#eff6ff;color:#2563EB}
+.comp-table tbody td{padding:12px 8px;border-bottom:1px solid #f3f4f6;font-size:13px;text-align:center}
+.comp-table tbody td:first-child{font-weight:600;color:#374151}
+.comp-table tbody td:last-child{background:#eff6ff;font-weight:700;color:#2563EB}
+.comp-table .yes{color:#16a34a}
+.comp-table .no{color:#dc2626}
+.comp-table .mid{color:#f59e0b}
+
+/* Pricing */
+.pricing{background:#f8fafc;padding:80px 32px;text-align:center}
+.pricing h2{font-size:28px;font-weight:900;text-align:center;margin-bottom:48px}
+.plan-grid{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.plan{flex:1;min-width:200px;background:#fff;border:2px solid #e2e8f0;border-radius:20px;padding:28px 20px;position:relative;transition:transform .2s;text-align:center}
+.plan.featured{border-color:#2563EB;transform:scale(1.03);box-shadow:0 8px 32px rgba(37,99,235,.15)}
+.plan .tag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#2563EB;color:#fff;font-size:12px;font-weight:700;padding:4px 16px;border-radius:20px}
+.plan h3{font-size:18px;font-weight:700;text-align:center;margin-bottom:4px;margin-top:8px}
+.plan .price{text-align:center;margin-bottom:20px}
+.plan .price .amount{font-size:28px;font-weight:900;color:#2563EB}
+.plan .price .period{font-size:13px;color:#9ca3af}
+.plan ul{list-style:none;margin-bottom:20px}
+.plan li{font-size:13px;padding:6px 0;color:#4b5563;display:flex;align-items:center;justify-content:center;gap:8px}
+.plan li::before{content:'';display:inline-block;width:18px;height:18px;background:#10b981;border-radius:50%;flex-shrink:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='white'%3E%3Cpath fill-rule='evenodd' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3E%3C/svg%3E");background-size:12px;background-repeat:no-repeat;background-position:center}
+.plan li.disabled{color:#d1d5db}
+.plan li.disabled::before{background:#e5e7eb;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%239ca3af'%3E%3Cpath fill-rule='evenodd' d='M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z'/%3E%3C/svg%3E");background-size:10px;background-repeat:no-repeat;background-position:center}
+.plan .target{font-size:12px;color:#9ca3af;text-align:center;margin-top:12px}
+
+/* Risk / Penalty */
+.risk{background:linear-gradient(180deg,#1a0000,#2d0a0a);color:#fff;text-align:center;padding:80px 32px}
+.risk h2{font-size:28px;font-weight:900;margin-bottom:16px}
+.risk .risk-sub{font-size:15px;opacity:.5;margin-bottom:48px;line-height:1.6}
+.risk-flow{display:flex;flex-direction:column;gap:0;margin-bottom:48px;align-items:center}
+.risk-step{width:100%;max-width:480px;border-radius:16px;padding:28px 24px;position:relative}
+.risk-step.step1{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3)}
+.risk-step.step2{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.4)}
+.risk-step.step3{background:rgba(239,68,68,.35);border:1px solid rgba(239,68,68,.5)}
+.risk-step.step4{background:rgba(239,68,68,.5);border:1px solid rgba(239,68,68,.7)}
+.risk-arrow{font-size:24px;color:#ef4444;padding:8px 0;opacity:.6}
+.risk-step .step-label{font-size:12px;font-weight:700;color:#fca5a5;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.risk-step h3{font-size:20px;font-weight:900;margin-bottom:8px;color:#fff}
+.risk-step .law{font-size:12px;color:#fca5a5;margin-bottom:8px;font-weight:600}
+.risk-step .detail{font-size:14px;opacity:.7;line-height:1.6}
+.risk-step .amount{font-size:28px;font-weight:900;color:#fbbf24;margin-top:8px}
+.risk-stat{display:flex;gap:16px;flex-wrap:wrap;margin-top:48px;justify-content:center}
+.risk-stat-item{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:20px 16px;flex:1;min-width:140px}
+.risk-stat-item .rs-val{font-size:24px;font-weight:900;color:#ef4444;margin-bottom:4px}
+.risk-stat-item .rs-label{font-size:12px;opacity:.5;line-height:1.4}
+.risk-total{background:linear-gradient(135deg,#dc2626,#991b1b);border-radius:20px;padding:36px;margin-top:32px;max-width:480px;display:inline-block;width:100%}
+.risk-total .rt-label{font-size:14px;opacity:.8;margin-bottom:8px}
+.risk-total .rt-amount{font-size:36px;font-weight:900;margin-bottom:4px}
+.risk-total .rt-sub{font-size:14px;opacity:.7}
+.risk-shield{background:linear-gradient(135deg,#059669,#047857);border-radius:20px;padding:36px;margin-top:16px;max-width:480px;display:inline-block;width:100%}
+.risk-shield .rs-label{font-size:14px;opacity:.8;margin-bottom:8px}
+.risk-shield .rs-amount{font-size:32px;font-weight:900;margin-bottom:4px}
+.risk-shield .rs-sub{font-size:14px;opacity:.7}
+
+/* CTA */
+.cta{background:linear-gradient(135deg,#0A1628 0%,#1a3a6c 50%,#2563EB 100%);color:#fff;text-align:center;padding:100px 32px}
+.cta .pre{font-size:16px;opacity:.7;margin-bottom:16px}
+.cta h2{font-size:32px;font-weight:900;line-height:1.4;margin-bottom:16px}
+.cta .market-data{font-size:18px;color:#fbbf24;font-weight:600;margin-bottom:48px;line-height:1.6}
+.cta .closing{font-size:24px;font-weight:900;margin-bottom:48px;line-height:1.5}
+.btn{display:inline-block;padding:18px 48px;border-radius:14px;font-size:18px;font-weight:700;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+.btn-primary{background:#fff;color:#2563EB;margin-bottom:16px;box-shadow:0 4px 24px rgba(0,0,0,.2)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.btn-secondary{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4);margin-bottom:32px}
+.btn-secondary:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+.cta .note{font-size:12px;opacity:.5;line-height:1.8}
+
+/* Footer */
+.footer{background:#0A1628;color:rgba(255,255,255,.4);text-align:center;padding:32px;font-size:12px;line-height:1.8}
+
+/* Roadmap */
+.roadmap{background:#f8fafc;text-align:center}
+.roadmap h2{font-size:28px;font-weight:900;text-align:center;margin-bottom:48px}
+.rm-timeline{display:inline-flex;flex-direction:column;align-items:center}
+.rm-item{display:flex;flex-direction:column;align-items:center;margin-bottom:32px;position:relative}
+.rm-item::after{content:'';position:absolute;bottom:-32px;width:2px;height:32px;background:#e2e8f0}
+.rm-item:last-child::after{display:none}
+.rm-dot{width:40px;height:40px;background:#2563EB;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:14px;font-weight:800;position:relative;z-index:1;margin-bottom:12px}
+.rm-content{text-align:center}
+.rm-content h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.rm-content .date{font-size:13px;color:#2563EB;font-weight:600;margin-bottom:8px}
+.rm-content p{font-size:14px;color:#6b7280;line-height:1.6}
+
+/* Partner */
+.partner{background:#fff;text-align:center}
+.partner h2{font-size:20px;font-weight:700;color:#9ca3af;margin-bottom:32px}
+.partner-logos{display:flex;justify-content:center;gap:32px;flex-wrap:wrap;align-items:center;opacity:.5}
+.partner-logos span{font-size:14px;font-weight:600;color:#6b7280;padding:12px 24px;border:1px solid #e2e8f0;border-radius:12px}
+
+/* Animations */
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+/* Responsive */
+@media(max-width:480px){
+  section{padding:48px 20px}
+  .hero{padding:60px 20px 50px}
+  .hero h1{font-size:28px}
+  .stat-card .value{font-size:24px}
+  .cred-grid{grid-template-columns:1fr}
+  .plan-grid{flex-direction:column}
+  .plan.featured{transform:none}
+  .save-compare{flex-direction:column}
+  .cta h2{font-size:26px}
+  .comp-table{font-size:11px}
+  .comp-table thead th,.comp-table tbody td{padding:8px 4px}
+  .country-grid{grid-template-columns:1fr}
+  .map-container{aspect-ratio:4/3}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="badge">의료광고 컴플라이언스 AI &mdash; 국내 최초</div>
+  <h1>올리기 전에 <span class="num">3</span>초,<br>과태료 걱정 끝.</h1>
+  <p class="sub">법령 30,000건 학습 AI가<br>의료광고를 자동으로 검증합니다.</p>
+  <div class="stats">
+    <div class="stat-card">
+      <div class="label">검증 정확도</div>
+      <div class="value num">95<span class="unit">%</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">비용 절감</div>
+      <div class="value num">83<span class="unit">%</span></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">콘텐츠 제작</div>
+      <div class="value num" style="font-size:22px">14일<span class="unit" style="font-size:18px">&rarr;</span>3시간</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PAIN ==================== -->
+<section class="pain fade-in">
+  <p class="eyebrow">원장님, 이런 경험 있으시죠?</p>
+  <h2>"마케팅에 돈은 쓰는데,<br>환자는 안 오고<br>과태료만 날아옵니다."</h2>
+  <div class="pain-card">"인스타에 시술 사진 올려도 되는 건가요?"<br>매번 검색하느라 <em>콘텐츠 하나에 반나절</em></div>
+  <div class="pain-card">"마케팅 대행사가 만든 콘텐츠에서 의료법 위반이 나왔습니다."<br><em>과태료는 병원이 냅니다.</em></div>
+  <div class="pain-card">"외국인 환자 유치하고 싶은데,<br>각 나라 의료광고법은 <em>어떻게 지키죠?</em>"</div>
+  <div class="data-row">
+    <div class="data-item">
+      <div class="num">300만 원</div>
+      <div class="desc">의료법 56조 위반<br>과태료 / 건</div>
+    </div>
+    <div class="data-item">
+      <div class="num">+47%</div>
+      <div class="desc">2024년 의료광고<br>행정처분 증가율</div>
+    </div>
+    <div class="data-item">
+      <div class="num">117만 명</div>
+      <div class="desc">2024년 방한<br>외국인 환자</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CREDIBILITY ==================== -->
+<section class="cred fade-in">
+  <p class="eyebrow">TRUSTA가 해결합니다.</p>
+  <h2>의료 마케팅 15년,<br>과태료 0건.</h2>
+  <div class="cred-grid">
+    <div class="cred-item">
+      <div class="icon">&#x1F4DA;</div>
+      <div class="val num">30,000<span style="font-size:16px">건</span></div>
+      <div class="lbl">법령 &middot; 판례 DB</div>
+    </div>
+    <div class="cred-item">
+      <div class="icon">&#x1F3AF;</div>
+      <div class="val num">95<span style="font-size:16px">%</span></div>
+      <div class="lbl">검증 정확도</div>
+    </div>
+    <div class="cred-item">
+      <div class="icon">&#x1F30D;</div>
+      <div class="val num">6<span style="font-size:16px">개국</span></div>
+      <div class="lbl">다국어 자동 생성</div>
+    </div>
+    <div class="cred-item">
+      <div class="icon">&#x26A1;</div>
+      <div class="val num">3<span style="font-size:16px">시간</span></div>
+      <div class="lbl">14일 &rarr; 3시간</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== UNDERDOG ==================== -->
+<section class="underdog fade-in">
+  <p class="quote">"저희도 처음엔 그냥<br><strong>병원 마케팅 대행사</strong>였습니다."</p>
+  <p class="quote">매번 콘텐츠 만들 때마다<br>변호사한테 전화하고,<br>의료법 조항 찾느라 밤새고,</p>
+  <p class="quote">그래도 결국<br><strong>과태료 통지서를 받았습니다.</strong></p>
+  <p class="punchline">"이걸 왜 사람이 하고 있지?"</p>
+  <div class="reveal">
+    <p>그래서 만들었습니다.<br>법령 30,000건을 학습한 AI가<br>콘텐츠 올리기 전에 자동으로 검증하는 시스템.</p>
+    <p class="big">사람이 놓치는 걸,<br>AI는 놓치지 않습니다.</p>
+  </div>
+</section>
+
+<!-- ==================== 3 REASONS ==================== -->
+<section class="story fade-in">
+  <p class="eyebrow">원장님의 마케팅이 실패하는 이유</p>
+  <h2>딱 3가지 때문입니다.</h2>
+
+  <div class="story-block">
+    <div class="story-num">1</div>
+    <h3>의료법을 모르고 콘텐츠를 만든다</h3>
+    <p>마케팅 대행사는 마케팅 전문가지, 의료법 전문가가 아닙니다.<br><strong>"전후 비교 사진", "최고의 결과", "100% 만족"</strong><br>전부 의료법 제56조 위반입니다.<br><br>과태료는 대행사가 아니라 <strong>원장님이 내십니다.</strong></p>
+  </div>
+
+  <div class="story-block">
+    <div class="story-num">2</div>
+    <h3>외국인 환자는 있는데, 다국어 콘텐츠가 없다</h3>
+    <p>2024년 일본 환자 <strong>44.1만 명.</strong><br>그런데 일본어 콘텐츠를 만들 인력은 없고,<br>번역 외주는 1건에 30만 원, 2주 소요.<br><br><strong>환자가 기다려주지 않습니다.</strong></p>
+  </div>
+
+  <div class="story-block">
+    <div class="story-num">3</div>
+    <h3>각 나라마다 의료광고 규제가 다르다</h3>
+    <p>일본은 의료법 제6조의5, 중국은 의료광고관리판법,<br>미국은 FTC Act &amp; FDA 가이드라인, 싱가포르는 SMC 광고규정...<br><br>6개국 규제를 사람이 추적하는 건 불가능합니다.<br><strong>AI만 가능합니다.</strong></p>
+  </div>
+</section>
+
+<!-- ==================== OBJECTION HANDLING ==================== -->
+<section class="objection fade-in">
+  <h2>원장님들이 자주 묻는 질문</h2>
+
+  <div class="obj-item">
+    <div class="obj-q">우리 같은 작은 의원도 되나요?</div>
+    <div class="obj-a">Starter 플랜 <strong>월 170만 원</strong>. 마케팅 대행사(월 200~700만 원) 대비 <strong>최대 76% 절감</strong>. 우리 고객의 대부분이 1인 의원입니다.</div>
+  </div>
+
+  <div class="obj-item">
+    <div class="obj-q">AI가 의료법을 진짜 이해하나요?</div>
+    <div class="obj-a">법령&middot;판례 <strong>30,000건 학습</strong> + 위험도 스코어링. 검증 정확도 <strong>95%</strong>. 최종 검수 리포트까지 자동 생성됩니다.</div>
+  </div>
+
+  <div class="obj-item">
+    <div class="obj-q">마케팅 직원이 없는데요?</div>
+    <div class="obj-a">템플릿 선택 &rarr; 병원 정보 입력 &rarr; AI 검증 &rarr; 자동 배포. <strong>10분이면 끝.</strong> 전담 인력이 필요 없습니다.</div>
+  </div>
+
+  <div class="obj-item">
+    <div class="obj-q">외국인 환자 유치가 현실적인가요?</div>
+    <div class="obj-a">2024년 방한 외국인 환자 <strong>117만 명</strong> (전년 대비 +93.2%). 일본 44만, 중국 고단가, 미국&middot;싱가포르 프리미엄. <strong>원장님 병원에 맞는 국가를 자동으로 공략합니다.</strong></div>
+  </div>
+</section>
+
+<!-- ==================== VALUE STACK ==================== -->
+<section class="value-stack fade-in">
+  <h2>TRUSTA에 포함된 모든 것</h2>
+  <p class="sub">단일 구독으로 마케팅 대행사+법무팀+번역팀+영상팀을 대체합니다</p>
+
+  <div class="vs-category">
+    <div class="vs-cat-title">AI 법률 검증</div>
+    <div class="vs-item"><div class="vs-num">01</div><div class="vs-content"><h4>실시간 의료법 위반 자동 탐지</h4><p>"전후 사진 비교", "최고", "유일" 등 과장 표현 자동 차단</p></div></div>
+    <div class="vs-item"><div class="vs-num">02</div><div class="vs-content"><h4>위험도 스코어링</h4><p>고&middot;중&middot;저 3단계 자동 분류 + 근거 조항 자동 표시</p></div></div>
+    <div class="vs-item"><div class="vs-num">03</div><div class="vs-content"><h4>규제 DB 30,000건</h4><p>의료법 &middot; AI기본법 &middot; 각국 광고법 통합 데이터베이스</p></div></div>
+  </div>
+
+  <div class="vs-category">
+    <div class="vs-cat-title">다국어 콘텐츠 자동 생성</div>
+    <div class="vs-item"><div class="vs-num">04</div><div class="vs-content"><h4>6개국 다국어 영상 자동 생성</h4><p>TTS/SVI/FFmpeg 기반 텍스트&rarr;영상 완전 자동화</p></div></div>
+    <div class="vs-item"><div class="vs-num">05</div><div class="vs-content"><h4>글로벌 채널 자동 배포</h4><p>인스타그램 &middot; 샤오홍슈 &middot; LINE &middot; TikTok 통합 관리</p></div></div>
+    <div class="vs-item"><div class="vs-num">06</div><div class="vs-content"><h4>AI 워터마크 자동 삽입</h4><p>AI기본법 준수 &mdash; 자동 삽입 및 관리</p></div></div>
+  </div>
+
+  <div class="vs-category">
+    <div class="vs-cat-title">환자 유치 자동화</div>
+    <div class="vs-item"><div class="vs-num">07</div><div class="vs-content"><h4>국가별 맞춤 콘텐츠 캘린더</h4><p>일본 &middot; 중국 &middot; 미국 &middot; 싱가포르 &middot; 인도네시아 &middot; 베트남</p></div></div>
+    <div class="vs-item"><div class="vs-num">08</div><div class="vs-content"><h4>실시간 AI 상담 챗봇</h4><p>다국어 24시간 무인 환자 응대</p></div></div>
+    <div class="vs-item"><div class="vs-num">09</div><div class="vs-content"><h4>병원 프로필 자동 생성</h4><p>의료진 소개 &middot; 시술 안내 &middot; 다국어 변환</p></div></div>
+  </div>
+
+  <div class="vs-category">
+    <div class="vs-cat-title">리스크 방어</div>
+    <div class="vs-item"><div class="vs-num">10</div><div class="vs-content"><h4>과태료 방어 리포트 자동 생성</h4><p>위반 소지 사전 차단 + 근거 문서화</p></div></div>
+    <div class="vs-item"><div class="vs-num">11</div><div class="vs-content"><h4>글로벌 규제 변경 실시간 알림</h4><p>각국 법령 개정 시 즉시 통보</p></div></div>
+    <div class="vs-item"><div class="vs-num">12</div><div class="vs-content"><h4>법률 매니지먼트 서비스</h4><p>Enterprise 전용 &mdash; 전담 법률 자문</p></div></div>
+  </div>
+</section>
+
+<!-- ==================== REVIEWS ==================== -->
+<section class="reviews fade-in">
+  <h2>도입 병원 원장님의 목소리</h2>
+
+  <div class="review-card">
+    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <p class="review-text">"개원 5년 차 피부과인데, 인스타 게시물 올릴 때마다 '이거 걸리나?' 검색하느라 콘텐츠 하나에 반나절이 걸렸습니다.<br><br>TRUSTA 도입 후 <strong>3초면 검증 끝.</strong> 지난 6개월간 <strong>경고장 0건.</strong> 이제 콘텐츠에만 집중할 수 있습니다."</p>
+    <p class="review-author">&mdash; 서울 강남 피부과 원장</p>
+  </div>
+
+  <div class="review-card">
+    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <p class="review-text">"마케팅 대행사에 월 500만 원 쓰고 있었는데, 대행사가 만든 콘텐츠에서 의료법 위반이 나왔습니다. <strong>과태료는 제가 냅니다.</strong><br><br>TRUSTA로 바꾸고 비용은 1/3로 줄었고, 위반 리스크는 사라졌습니다. <strong>AI가 사람보다 정확합니다.</strong>"</p>
+    <p class="review-author">&mdash; 부산 성형외과 원장</p>
+  </div>
+
+  <div class="review-card">
+    <div class="review-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+    <p class="review-text">"일본 환자 유치를 하고 싶었는데, 일본어 콘텐츠 만들 인력도, 일본 의료광고법도 몰랐습니다.<br><br>TRUSTA가 일본어 영상까지 자동으로 만들어주고, 일본 규제까지 검증해줍니다. 도입 3개월 만에 <strong>일본 환자 문의 4배 증가</strong>했습니다."</p>
+    <p class="review-author">&mdash; 서울 의원 국제진료센터장</p>
+  </div>
+</section>
+
+<!-- ==================== BEFORE/AFTER ==================== -->
+<section class="ba fade-in">
+  <h2>TRUSTA 도입 전 vs 후</h2>
+  <table class="ba-table">
+    <thead><tr><th></th><th class="before">Before &#x274C;</th><th class="after">After &#x2705;</th></tr></thead>
+    <tbody>
+      <tr><td class="metric">콘텐츠 제작</td><td class="bad">14일</td><td class="good">3시간</td></tr>
+      <tr><td class="metric">마케팅 비용</td><td class="bad">월 200~700만 원</td><td class="good">월 170만 원</td></tr>
+      <tr><td class="metric">법률 검증</td><td class="bad">변호사 수동 확인</td><td class="good">AI 자동 3초</td></tr>
+      <tr><td class="metric">다국어 대응</td><td class="bad">번역 외주 2주</td><td class="good">6개국 자동 생성</td></tr>
+      <tr><td class="metric">과태료 리스크</td><td class="bad">항상 존재</td><td class="good">0건</td></tr>
+      <tr><td class="metric">외국인 환자</td><td class="bad">어떻게 유치?</td><td class="good">국가별 자동 공략</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== MARKET MAP ==================== -->
+<section class="market fade-in">
+  <h2>원장님의 환자는<br>6개국에서 옵니다</h2>
+  <p class="market-sub">TRUSTA가 각 국가별 규제를 자동 검증하고,<br>현지 최적화 콘텐츠를 생성합니다.</p>
+
+  <!-- Interactive Map -->
+  <div class="map-container">
+    <div class="map-bg">&#x1F5FA;</div>
+    <!-- Korea (center reference) -->
+    <div class="map-dot" style="top:38%;left:72%">
+      <div class="dot" style="background:#f59e0b;box-shadow:0 0 20px rgba(245,158,11,.6);border-color:rgba(245,158,11,.3)"></div>
+      <div class="dot-label" style="background:rgba(245,158,11,.7)">KOREA HQ</div>
+    </div>
+    <!-- Japan -->
+    <div class="map-dot" style="top:42%;left:80%">
+      <div class="dot"></div>
+      <div class="dot-label">JAPAN</div>
+    </div>
+    <!-- China -->
+    <div class="map-dot" style="top:45%;left:62%">
+      <div class="dot"></div>
+      <div class="dot-label">CHINA</div>
+    </div>
+    <!-- USA -->
+    <div class="map-dot" style="top:35%;left:18%">
+      <div class="dot"></div>
+      <div class="dot-label">USA</div>
+    </div>
+    <!-- Singapore -->
+    <div class="map-dot" style="top:68%;left:65%">
+      <div class="dot"></div>
+      <div class="dot-label">SINGAPORE</div>
+    </div>
+    <!-- Indonesia -->
+    <div class="map-dot" style="top:72%;left:72%">
+      <div class="dot"></div>
+      <div class="dot-label">INDONESIA</div>
+    </div>
+    <!-- Vietnam -->
+    <div class="map-dot" style="top:58%;left:66%">
+      <div class="dot"></div>
+      <div class="dot-label">VIETNAM</div>
+    </div>
+    <!-- Connection lines (SVG) -->
+    <svg class="map-line" style="width:100%;height:100%;position:absolute;top:0;left:0;pointer-events:none">
+      <line x1="72%" y1="38%" x2="80%" y2="42%" stroke="rgba(37,99,235,.3)" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="72%" y1="38%" x2="62%" y2="45%" stroke="rgba(37,99,235,.3)" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="72%" y1="38%" x2="18%" y2="35%" stroke="rgba(37,99,235,.3)" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="72%" y1="38%" x2="65%" y2="68%" stroke="rgba(37,99,235,.3)" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="72%" y1="38%" x2="72%" y2="72%" stroke="rgba(37,99,235,.3)" stroke-width="1" stroke-dasharray="4"/>
+      <line x1="72%" y1="38%" x2="66%" y2="58%" stroke="rgba(37,99,235,.3)" stroke-width="1" stroke-dasharray="4"/>
+    </svg>
+  </div>
+
+  <!-- Country Cards Grid -->
+  <div class="country-grid">
+
+    <div class="country">
+      <div class="flag">&#x1F1EF;&#x1F1F5;</div>
+      <h3>일본</h3>
+      <div class="spend">44.1만 명 (1위) &middot; 1인당 350만 원</div>
+      <p>LINE 최적화 콘텐츠 자동 생성<br>일본 의료법 제6조의5 자동 검증<br>정제된 이미지 &middot; 법적 가이드라인 준수</p>
+    </div>
+
+    <div class="country">
+      <div class="flag">&#x1F1E8;&#x1F1F3;</div>
+      <h3>중국</h3>
+      <div class="spend">1인당 937만 원 &middot; 고단가 성형 집중</div>
+      <p>샤오홍슈 특화 콘텐츠 자동 생성<br>의료광고관리판법 자동 검증<br>성형 &middot; 피부 &middot; 시술 환자군 공략</p>
+    </div>
+
+    <div class="country">
+      <div class="flag">&#x1F1FA;&#x1F1F8;</div>
+      <h3>미국</h3>
+      <div class="spend">프리미엄 의료관광 &middot; 고소득 환자</div>
+      <p>FTC Act &amp; FDA 광고 가이드라인 검증<br>Instagram &middot; YouTube 영문 콘텐츠<br>첨단 시술 &middot; 줄기세포 &middot; 정밀의료</p>
+    </div>
+
+    <div class="country">
+      <div class="flag">&#x1F1F8;&#x1F1EC;</div>
+      <h3>싱가포르</h3>
+      <div class="spend">동남아 허브 &middot; 고소득 환자 유입</div>
+      <p>SMC 광고규정 자동 검증<br>영어 &middot; 중국어 이중 콘텐츠<br>건강검진 &middot; 피부과 &middot; 치과</p>
+    </div>
+
+    <div class="country">
+      <div class="flag">&#x1F1EE;&#x1F1E9;</div>
+      <h3>인도네시아</h3>
+      <div class="spend">2.7억 인구 &middot; 급성장 의료관광 시장</div>
+      <p>인도네시아어 콘텐츠 자동 생성<br>할랄 의료 &middot; 건강검진 수요<br>소셜미디어 중심 마케팅</p>
+    </div>
+
+    <div class="country">
+      <div class="flag">&#x1F1FB;&#x1F1F3;</div>
+      <h3>베트남</h3>
+      <div class="spend">1인당 700만 원 &middot; 높은 성장 잠재력</div>
+      <p>베트남어 콘텐츠 자동 생성<br>내과 &middot; 피부과 &middot; 외과<br>젊은 인구 &middot; SNS 기반 환자 유입</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== COMPETITOR ==================== -->
+<section class="competitor fade-in">
+  <h2>왜 TRUSTA인가?</h2>
+  <table class="comp-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>마케팅<br>대행사</th>
+        <th>메디로이어<br>(법률자문)</th>
+        <th>글로벌번역<br>(의료번역)</th>
+        <th>TRUSTA</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>의료법 자동검증</td><td class="no">&#x274C;</td><td class="mid">수동</td><td class="no">&#x274C;</td><td class="yes">&#x2705; AI</td></tr>
+      <tr><td>다국어 영상생성</td><td class="no">&#x274C;</td><td class="no">&#x274C;</td><td class="mid">텍스트만</td><td class="yes">&#x2705;</td></tr>
+      <tr><td>글로벌 규제대응</td><td class="no">&#x274C;</td><td class="mid">한국만</td><td class="no">&#x274C;</td><td class="yes">&#x2705; 6개국</td></tr>
+      <tr><td>AI 컴플라이언스</td><td class="no">&#x274C;</td><td class="no">&#x274C;</td><td class="no">&#x274C;</td><td class="yes">&#x2705;</td></tr>
+      <tr><td>콘텐츠 제작</td><td class="yes">&#x2705;</td><td class="no">&#x274C;</td><td class="no">&#x274C;</td><td class="yes">&#x2705; AI</td></tr>
+      <tr><td>월 비용</td><td>200~700만</td><td>건당 과금</td><td>건당 30만+</td><td style="font-weight:900;color:#2563EB">170만~</td></tr>
+      <tr><td>과태료 리스크</td><td class="no">있음</td><td>낮음</td><td>해당없음</td><td class="yes" style="font-weight:900">0건</td></tr>
+      <tr><td>확장성</td><td>낮음</td><td>국내만</td><td>번역만</td><td class="yes" style="font-weight:900">올인원</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ==================== PRICING ==================== -->
+<section class="pricing fade-in">
+  <h2>요금 안내</h2>
+  <div class="plan-grid">
+    <div class="plan">
+      <h3>Starter</h3>
+      <div class="price">
+        <div class="amount num">170<span style="font-size:16px">만 원</span></div>
+        <div class="period">/ 월</div>
+      </div>
+      <ul>
+        <li>AI 의료법 검증</li>
+        <li>일본&middot;중국 텍스트 검증</li>
+        <li>인스타&middot;샤오홍슈 자동 배포</li>
+        <li class="disabled">영상 자동 생성</li>
+        <li class="disabled">AI 상담 챗봇</li>
+        <li class="disabled">AI 워터마크</li>
+      </ul>
+      <p class="target">소규모 의원 &middot; 1인 유치사업자</p>
+    </div>
+    <div class="plan featured">
+      <div class="tag">추천</div>
+      <h3>Pro</h3>
+      <div class="price">
+        <div class="amount num">350<span style="font-size:16px">만 원</span></div>
+        <div class="period">/ 월</div>
+      </div>
+      <ul>
+        <li>Starter 전체 포함</li>
+        <li>6개국 다국어 영상 생성</li>
+        <li>전 채널 자동 배포</li>
+        <li>AI 상담 챗봇</li>
+        <li>AI 워터마크 관리</li>
+        <li class="disabled">EMR/OCS 연동</li>
+      </ul>
+      <p class="target">중대형 병원 &middot; 전문 센터</p>
+    </div>
+    <div class="plan">
+      <h3>Enterprise</h3>
+      <div class="price">
+        <div class="amount num" style="font-size:22px">별도 협의</div>
+        <div class="period">&nbsp;</div>
+      </div>
+      <ul>
+        <li>Pro 전체 포함</li>
+        <li>OCS/EMR 시스템 연동</li>
+        <li>글로벌 규제 리포트 무제한</li>
+        <li>전담 법률 매니지먼트</li>
+        <li>맞춤 API 연동</li>
+        <li>온보딩 전담 매니저</li>
+      </ul>
+      <p class="target">대학병원 &middot; 대형 종합병원 &middot; B2G</p>
+    </div>
+  </div>
+  <p style="text-align:center;font-size:13px;color:#9ca3af;margin-top:24px">* 초기 구축비 500만 원 (1회) &mdash; 규제 가이드라인 세팅, 브랜드 템플릿 최적화 포함<br>* 연간 계약 시 2개월 무료</p>
+</section>
+
+<!-- ==================== RISK / PENALTY ==================== -->
+<section class="risk fade-in">
+  <h2>의료광고 위반,<br>한 번이면 끝납니다.</h2>
+  <p class="risk-sub">마케팅 대행사에 맡긴 콘텐츠 하나가<br>원장님의 병원을 무너뜨릴 수 있습니다.</p>
+
+  <div class="risk-flow">
+
+    <div class="risk-step step1">
+      <div class="step-label">STEP 1 &mdash; 과태료</div>
+      <h3>콘텐츠 1건 위반</h3>
+      <div class="law">의료법 제56조 위반 &rarr; 제92조 제1항</div>
+      <div class="detail">"전후 비교", "최고", "100% 만족" 등<br>미심의 광고 게시 시 건당 부과</div>
+      <div class="amount num">최대 300만 원 / 건</div>
+    </div>
+
+    <div class="risk-arrow">&darr;</div>
+
+    <div class="risk-step step2">
+      <div class="step-label">STEP 2 &mdash; 형사처벌</div>
+      <h3>반복 또는 악질 위반</h3>
+      <div class="law">의료법 제89조 (벌칙)</div>
+      <div class="detail">허위&middot;과대 광고, 미심의 반복 적발 시<br>원장님 본인에게 형사 처벌</div>
+      <div class="amount num">1년 이하 징역 / 1,000만 원 벌금</div>
+    </div>
+
+    <div class="risk-arrow">&darr;</div>
+
+    <div class="risk-step step3">
+      <div class="step-label">STEP 3 &mdash; 영업정지</div>
+      <h3>병원 문을 닫아야 합니다</h3>
+      <div class="law">의료법 제64조 (행정처분)</div>
+      <div class="detail">거짓 광고 &rarr; 업무정지 2개월<br>과장 광고 &rarr; 업무정지 1개월<br>중대&middot;반복 위반 &rarr; 최대 1년 또는 개설허가 취소</div>
+      <div class="amount num">업무정지 최대 1년</div>
+    </div>
+
+    <div class="risk-arrow">&darr;</div>
+
+    <div class="risk-step step4">
+      <div class="step-label">STEP 4 &mdash; 과징금 폭탄</div>
+      <h3>영업정지 대신 돈으로 낸다면?</h3>
+      <div class="law">의료법 제67조 (업무정지 갈음 과징금)</div>
+      <div class="detail">2020년 시행령 개정으로 상한 20배 상향<br>1일당 최대 2,383만 6,000원 &times; 정지 일수</div>
+      <div class="amount num">최대 10억 원</div>
+    </div>
+
+  </div>
+
+  <!-- Real enforcement data -->
+  <div class="risk-stat">
+    <div class="risk-stat-item">
+      <div class="rs-val num">10,666건</div>
+      <div class="rs-label">2020~2023년<br>위법 의료광고 적발</div>
+    </div>
+    <div class="risk-stat-item">
+      <div class="rs-val num">87%</div>
+      <div class="rs-label">미심의 광고<br>(몰라서 위반)</div>
+    </div>
+    <div class="risk-stat-item">
+      <div class="rs-val num">+47%</div>
+      <div class="rs-label">2024년<br>행정처분 증가율</div>
+    </div>
+  </div>
+
+  <!-- Total risk vs TRUSTA -->
+  <div class="risk-total">
+    <div class="rt-label">기존 방식 최악의 시나리오</div>
+    <div class="rt-amount num">마케팅비 + 과태료 + 과징금 + 영업정지</div>
+    <div class="rt-sub">대행사비 연 6,000만 + 과태료 300만/건 + 과징금 최대 10억 + 영업정지 기회비용</div>
+  </div>
+  <div class="risk-shield">
+    <div class="rs-label">TRUSTA 도입 시</div>
+    <div class="rs-amount num">월 170만 원 &middot; 위반 리스크 0건</div>
+    <div class="rs-sub">AI가 올리기 전에 3초 만에 검증 &mdash; 과태료&middot;과징금&middot;영업정지 원천 차단</div>
+  </div>
+</section>
+
+<!-- ==================== ROADMAP ==================== -->
+<section class="roadmap fade-in">
+  <h2>기술 로드맵</h2>
+  <div class="rm-timeline">
+
+  <div class="rm-item">
+    <div class="rm-dot num">1</div>
+    <div class="rm-content">
+      <div class="date">2026.05 ~ 06</div>
+      <h3>모듈 통합 및 안정화</h3>
+      <p>300개 노드 연동, Vision/FFmpeg 파이프라인 안정화</p>
+    </div>
+  </div>
+
+  <div class="rm-item">
+    <div class="rm-dot num">2</div>
+    <div class="rm-content">
+      <div class="date">2026.07 ~ 09</div>
+      <h3>Compliance-RAG 고도화</h3>
+      <p>법령/판례 DB 30,000건 확장, 위험도 스코어링 정밀화</p>
+    </div>
+  </div>
+
+  <div class="rm-item">
+    <div class="rm-dot num">3</div>
+    <div class="rm-content">
+      <div class="date">2026.10 ~ 11</div>
+      <h3>멀티모달 생성 파이프라인 완성</h3>
+      <p>텍스트&rarr;다국어 영상 자동 생성, AI 워터마크 자동 삽입</p>
+    </div>
+  </div>
+
+  <div class="rm-item">
+    <div class="rm-dot num">4</div>
+    <div class="rm-content">
+      <div class="date">2027 ~</div>
+      <h3>글로벌 6개국 확장</h3>
+      <p>미국&middot;싱가포르&middot;인도네시아&middot;베트남 시장 본격 진출, EMR/OCS 연동</p>
+    </div>
+  </div>
+
+  </div>
+</section>
+
+<!-- ==================== PARTNER ==================== -->
+<section class="partner fade-in">
+  <h2>함께하는 파트너</h2>
+  <div class="partner-logos">
+    <span>강원특별자치도</span>
+    <span>보건산업진흥원</span>
+    <span>제휴 의료기관</span>
+  </div>
+</section>
+
+<!-- ==================== CTA ==================== -->
+<section class="cta">
+  <p class="pre">원장님, 지금 시작하지 않으면</p>
+  <h2>경쟁 병원이 먼저<br>외국인 환자를 가져갑니다.</h2>
+  <p class="market-data">2024년 외국인 환자 117만 명<br>2034년 시장 2,500억 달러</p>
+  <p class="closing">이 시장에서<br>원장님 병원의 자리를 만드세요.</p>
+  <a href="#" class="btn btn-primary" onclick="alert('데모 신청 기능은 준비 중입니다.')">14일 무료 체험 시작</a><br>
+  <a href="#" class="btn btn-secondary" onclick="alert('상담 신청 기능은 준비 중입니다.')">무료 데모 상담 신청</a>
+  <p class="note">* 14일 무료 체험 후 자동 결제 없음<br>* 데모 상담은 30분 내외, 화상 또는 방문<br>* 도입 결정 후 구축까지 평균 5영업일</p>
+</section>
+
+<footer class="footer">
+  &copy; 2026 TRUSTA. All rights reserved.<br>
+  의료광고 컴플라이언스 AI 솔루션
+</footer>
+
+</div><!-- .page -->
+
+<script>
+// Scroll fade-in animation
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

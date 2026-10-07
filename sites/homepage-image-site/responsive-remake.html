@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WISIK Responsive Remake</title>
+    <meta
+      name="description"
+      content="A responsive web-style remake using the supplied WISIK homepage captures as the source visuals."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="remake-page">
+    <header class="topbar floating" aria-label="Page navigation">
+      <a class="brand" href="index.html">WISIK</a>
+      <nav class="nav-links" aria-label="Version links">
+        <a href="image-stack.html">Image Stack</a>
+        <a aria-current="page" href="responsive-remake.html">Responsive Remake</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="remake-hero" aria-labelledby="remake-title">
+        <div>
+          <p class="eyebrow">Version 02</p>
+          <h1 id="remake-title">Wisdom meets investing</h1>
+          <p>
+            A responsive presentation layer built around the supplied WISIK
+            homepage visuals, with easier navigation and cleaner scaling.
+          </p>
+          <div class="hero-actions">
+            <a href="#screen-1">Start</a>
+            <a href="#screen-10">Highlights</a>
+            <a href="#screen-30">Later Sections</a>
+          </div>
+        </div>
+      </section>
+
+      <aside class="progress-rail" aria-label="Section shortcuts">
+        <a href="#screen-1">01</a>
+        <a href="#screen-10">10</a>
+        <a href="#screen-18">18</a>
+        <a href="#screen-30">30</a>
+        <a href="#screen-41">41</a>
+      </aside>
+
+      <section
+        id="remake-stack"
+        class="remake-stack"
+        data-render-mode="remake"
+        aria-label="Responsive homepage sections"
+      ></section>
+    </main>
+
+    <script src="assets/site.js"></script>
+  </body>
+</html>
